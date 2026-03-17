@@ -311,22 +311,16 @@ const ClasesChart: React.FC = () => {
 								<LabelList
 									dataKey="difference"
 									position="top"
-									content={({
-										x,
-										y,
-										width: barWidth,
-										value,
-									}: {
-										x?: number;
-										y?: number;
-										width?: number;
-										value?: number;
-									}) => {
+									content={(props) => {
+										const x = Number(props.x);
+										const y = Number(props.y);
+										const barWidth = Number(props.width);
+										const value = props.value as number | undefined;
 										if (
 											value == null ||
-											x == null ||
-											y == null ||
-											barWidth == null
+											Number.isNaN(x) ||
+											Number.isNaN(y) ||
+											Number.isNaN(barWidth)
 										)
 											return null;
 										const isNegative = value < 0;
