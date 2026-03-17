@@ -33,14 +33,14 @@ export function DaysContainer(props: DaysContainerProps) {
 	});
 
 	return (
-		<div className="grid grid-cols-7 gap-[1px] w-full bg-gray-200 p-[1px]">
+		<div className="grid grid-cols-7 gap-[2px] w-full bg-gray-100/80 p-[2px]">
 			{cells.map(({ date, type }) =>
 				type === "current" ? (
 					<div
 						key={date.toISOString()}
 						className={`flex flex-col items-center justify-center text-center 
             bg-white 
-            ${isMobile ? "h-[72px]" : "h-[64px]"}
+            ${isMobile ? "h-[74px]" : "h-[68px]"}
             transition-all duration-200`}
 					>
 						<Day num={date} calendarioAutoescuelaProps={props} />
@@ -49,8 +49,8 @@ export function DaysContainer(props: DaysContainerProps) {
 					<div
 						key={date.toISOString()}
 						className={`flex flex-col items-center justify-center text-center 
-            ${isMobile ? "h-[72px]" : "h-[64px]"} 
-            bg-gray-50 border border-gray-200 text-gray-400 text-xs sm:text-sm select-none`}
+            ${isMobile ? "h-[74px]" : "h-[68px]"} 
+            bg-gray-50/60 text-gray-300 text-xs sm:text-sm select-none font-medium`}
 					>
 						{date.getDate()}
 					</div>

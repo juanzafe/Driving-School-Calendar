@@ -168,20 +168,17 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 		setShowModal(false);
 	};
 
-	const cardBase =
-		"bg-emerald-50 border border-emerald-200 rounded-md p-4 shadow-sm flex flex-col text-sm";
-
 	return (
 		<>
-			<div className={cardBase}>
-				<div className="flex items-center gap-2 text-emerald-800 font-semibold mb-2">
-					<Briefcase size={16} />
+			<div className="flex flex-col text-sm">
+				<div className="flex items-center gap-2 text-brand-700 font-bold mb-2">
+					<Briefcase size={14} className="text-brand-600" />
 					<span>Configuración</span>
 				</div>
-				<div className="bg-white rounded-md border border-gray-200 p-3 text-sm space-y-2">
+				<div className="bg-gray-50/80 rounded-lg border border-gray-100 p-3 text-sm space-y-2">
 					<div className="flex justify-between items-center">
-						<span className="flex items-center gap-1 text-gray-700">
-							<Briefcase size={15} className="text-emerald-600" /> Tipo de
+						<span className="flex items-center gap-1.5 text-gray-600">
+							<Briefcase size={15} className="text-brand-500" /> Tipo de
 							jornada:
 						</span>
 						<select
@@ -189,21 +186,21 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 							onChange={(e) =>
 								setJornada(e.target.value as "media" | "completa")
 							}
-							className="px-2 py-1 border border-gray-300 rounded-md text-sm font-medium"
+							className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-brand-200 focus:border-brand-400 outline-none transition-all"
 						>
 							<option value="completa">Completa</option>
 							<option value="media">Media</option>
 						</select>
 					</div>
 
-					<div className="flex justify-between items-center pt-2 border-t border-gray-200">
-						<span className="flex items-center gap-1 text-gray-700">
-							<Plane size={15} className="text-emerald-600" /> Vacaciones:
+					<div className="flex justify-between items-center pt-2 border-t border-gray-100">
+						<span className="flex items-center gap-1.5 text-gray-600">
+							<Plane size={15} className="text-brand-500" /> Vacaciones:
 						</span>
 						<button
 							type="button"
 							onClick={() => setShowModal(true)}
-							className="px-3 py-1 bg-emerald-600 text-white rounded-md text-sm font-medium hover:bg-emerald-700 transition"
+							className="px-4 py-1.5 bg-gradient-to-r from-brand-500 to-emerald-500 text-white rounded-lg text-sm font-medium hover:from-brand-600 hover:to-emerald-600 transition-all shadow-soft hover:shadow-md"
 						>
 							{naturalVacationDays > 0
 								? `${naturalVacationDays} días`
@@ -214,11 +211,13 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 			</div>
 
 			{showModal && (
-				<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-					<div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+				<div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+					<div className="bg-white rounded-2xl shadow-glass max-w-md w-full p-6 border border-gray-100">
 						<div className="flex justify-between items-center mb-4">
-							<h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-								<Calendar size={20} className="text-emerald-600" />
+							<h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+								<div className="p-1.5 bg-brand-100 rounded-lg">
+									<Calendar size={18} className="text-brand-600" />
+								</div>
 								Configurar Vacaciones
 							</h2>
 							<button
@@ -243,7 +242,7 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 									type="date"
 									value={startDate}
 									onChange={handleStartDateChange}
-									className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-200 focus:border-brand-400 outline-none transition-all"
 								/>
 							</div>
 
@@ -260,7 +259,7 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 									onChange={(e) =>
 										handleNaturalDaysChange(Number(e.target.value))
 									}
-									className="w-full px-3 py-2 border border-gray-300 rounded-md"
+									className="w-full px-3 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-200 focus:border-brand-400 outline-none transition-all"
 								>
 									<option value={0}>Selecciona días</option>
 									{Array.from({ length: 31 }, (_, i) => {
@@ -279,7 +278,7 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 							</div>
 
 							{calculatedEndDate && (
-								<div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+								<div className="bg-blue-50/80 border border-blue-100 rounded-xl p-3">
 									<div className="flex items-start gap-2">
 										<AlertCircle size={18} className="text-blue-600 mt-0.5" />
 										<div className="text-sm">
@@ -306,7 +305,7 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 									type="button"
 									onClick={handleSaveVacations}
 									disabled={!startDate || naturalDays <= 0}
-									className="flex-1 px-4 py-2 bg-emerald-600 text-white rounded-md font-medium hover:bg-emerald-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+									className="flex-1 px-4 py-2.5 bg-gradient-to-r from-brand-500 to-emerald-500 text-white rounded-xl font-medium hover:from-brand-600 hover:to-emerald-600 disabled:bg-gray-300 disabled:from-gray-300 disabled:to-gray-300 disabled:cursor-not-allowed transition-all shadow-soft"
 								>
 									Guardar
 								</button>
@@ -314,7 +313,7 @@ const VacacionesYJornada: React.FC<VacacionesYJornadaProps> = ({
 									<button
 										type="button"
 										onClick={handleClearVacations}
-										className="px-4 py-2 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition"
+										className="px-4 py-2.5 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-all shadow-soft"
 									>
 										Borrar
 									</button>

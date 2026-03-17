@@ -68,30 +68,30 @@ export function Month(props: CalendarioAutoescuelaProps) {
 	return (
 		<div
 			className={`
-        flex flex-col shadow-sm border border-emerald-100 overflow-hidden
-        bg-gradient-to-b from-emerald-50 to-white text-gray-900
+        flex flex-col shadow-glass overflow-hidden
+        bg-white text-gray-900
         w-full h-full
-        ${isMobile ? "rounded-none" : "rounded-xl"}
+        ${isMobile ? "rounded-none" : "rounded-2xl border border-gray-100"}
       `}
 		>
 			<div
 				className={`
-          flex justify-between items-center bg-emerald-100 text-emerald-800 border-b border-emerald-200
-          ${isMobile ? "px-3 py-2" : "px-6 py-3"}
+          flex justify-between items-center bg-gray-200 text-gray-700
+          ${isMobile ? "px-4 py-3" : "px-6 py-4"}
         `}
 			>
 				<button
 					type="button"
 					onClick={handlePreviousMonth}
-					className="p-1.5 hover:bg-emerald-200 rounded-full transition"
+					className="p-2 hover:bg-white/20 rounded-full transition-all duration-200 active:scale-90"
 					title="Mes anterior"
 				>
-					<ChevronLeft size={isMobile ? 20 : 22} />
+					<ChevronLeft size={isMobile ? 20 : 24} />
 				</button>
 
-				<div className="flex items-center gap-2 select-none">
-					<Calendar size={isMobile ? 18 : 20} className="text-emerald-700" />
-					<h1 className="capitalize tracking-wide text-base sm:text-lg font-semibold">
+				<div className="flex items-center gap-2.5 select-none">
+					<Calendar size={isMobile ? 18 : 22} className="opacity-90" />
+					<h1 className="capitalize tracking-wide text-lg sm:text-xl font-bold">
 						{`${nombreMes} ${year}`}
 					</h1>
 				</div>
@@ -99,18 +99,18 @@ export function Month(props: CalendarioAutoescuelaProps) {
 				<button
 					type="button"
 					onClick={handleNextMonth}
-					className="p-1.5 hover:bg-emerald-200 rounded-full transition"
+					className="p-2 hover:bg-white/20 rounded-full transition-all duration-200 active:scale-90"
 					title="Mes siguiente"
 				>
-					<ChevronRight size={isMobile ? 20 : 22} />
+					<ChevronRight size={isMobile ? 20 : 24} />
 				</button>
 			</div>
 			<MonthHeader {...props} />
 			<DaysContainer {...props} currentDate={currentDate} />
 			<div
 				className={`
-          bg-white border-t border-gray-200
-          ${isMobile ? "py-3 px-3" : "py-4 px-6"}
+          bg-gradient-to-b from-gray-50 to-white border-t border-gray-100
+          ${isMobile ? "py-4 px-3" : "py-5 px-6"}
         `}
 			>
 				<WorkingDaysCounter

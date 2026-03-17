@@ -33,13 +33,14 @@ interface MonthlyData {
 }
 
 const chartTheme = {
-	gridColor: "#e5e7eb",
-	axisFont: { fontSize: 12, fontFamily: "Inter, sans-serif" },
-	legendFont: { fontSize: 13, fontFamily: "Inter, sans-serif" },
+	gridColor: "#f0f0f0",
+	axisFont: { fontSize: 12, fontFamily: "Inter, system-ui, sans-serif" },
+	legendFont: { fontSize: 13, fontFamily: "Inter, system-ui, sans-serif" },
 	tooltipStyle: {
-		backgroundColor: "rgba(255, 255, 255, 0.95)",
-		border: "1px solid #d1d5db",
-		borderRadius: 8,
+		backgroundColor: "rgba(255, 255, 255, 0.96)",
+		border: "1px solid #e5e7eb",
+		borderRadius: 12,
+		boxShadow: "0 8px 32px rgba(0, 0, 0, 0.08)",
 	},
 };
 
@@ -207,39 +208,41 @@ const ClasesChart: React.FC = () => {
 
 	if (loading) {
 		return (
-			<div className="w-full bg-white rounded-xl shadow-md p-4 border border-gray-200 text-center">
-				<p className="text-gray-600 animate-pulse">Cargando gráficas...</p>
+			<div className="w-full bg-white/80 backdrop-blur-sm rounded-2xl shadow-glass p-5 border border-gray-100 text-center">
+				<p className="text-gray-500 animate-pulse text-sm">
+					Cargando gráficas...
+				</p>
 			</div>
 		);
 	}
 
 	return (
-		<div className="space-y-8">
-			<div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-				<h2 className="text-lg sm:text-xl font-semibold mb-4 text-center text-emerald-700">
-					Clases por día - {currentMonth}
+		<div className="space-y-8 animate-fade-in">
+			<div className="bg-white rounded-2xl shadow-glass p-6 border border-gray-100">
+				<h2 className="text-lg sm:text-xl font-bold mb-4 text-center text-gray-800">
+					Clases por día —{" "}
+					<span className="text-brand-600">{currentMonth}</span>
 				</h2>
 				<ResponsiveContainer width="100%" height={isMobile ? 260 : 320}>
-					<ComposedChart data={dailyData}>
+					<ComposedChart
+						data={dailyData}
+						margin={
+							isMobile
+								? { left: -15, right: 5, top: 5, bottom: 20 }
+								: { bottom: 20 }
+						}
+					>
 						<CartesianGrid
 							strokeDasharray="3 3"
 							stroke={chartTheme.gridColor}
 						/>
-						<XAxis
-							dataKey="dia"
-							tick={chartTheme.axisFont}
-							label={{
-								value: "Día del mes",
-								position: "insideBottom",
-								offset: -5,
-							}}
-						/>
-						<YAxis tick={chartTheme.axisFont} />
+						<XAxis dataKey="dia" tick={chartTheme.axisFont} />
+						<YAxis tick={chartTheme.axisFont} width={isMobile ? 30 : 60} />
 						<Tooltip
 							contentStyle={chartTheme.tooltipStyle}
 							formatter={(value: number) => [`${value} clases`, "Clases"]}
 						/>
-						<Legend wrapperStyle={chartTheme.legendFont} />
+						{!isMobile && <Legend wrapperStyle={chartTheme.legendFont} />}
 						<Line
 							type="monotone"
 							dataKey="clases"
@@ -253,18 +256,45 @@ const ClasesChart: React.FC = () => {
 			</div>
 
 			{monthlyData.length > 0 && (
-				<div className="bg-white rounded-xl shadow-md p-6 border border-gray-200">
-					<h2 className="text-lg sm:text-xl font-semibold mb-4 text-center text-emerald-700">
-						Diferencia vs objetivo (últimos 6 meses)
+				<div className="bg-white rounded-2xl shadow-glass p-6 border border-gray-100 relative">
+					<div
+						className={`absolute top-4 right-4 px-3 py-1.5 rounded-lg text-sm font-bold ${
+							monthlyData.reduce((sum, m) => sum + m.difference, 0) >= 0
+								? "bg-green-100 text-green-700"
+								: "bg-red-100 text-red-700"
+						}`}
+					>
+						{(() => {
+							const total =
+								Math.round(
+									monthlyData.reduce((sum, m) => sum + m.difference, 0) * 10,
+								) / 10;
+							return `Resultado total: ${total > 0 ? "+" : ""}${total.toFixed(1)}`;
+						})()}
+					</div>
+					<h2 className="text-lg sm:text-xl font-bold mb-4 text-center text-gray-800">
+						Diferencia vs objetivo{" "}
+						<span className="text-brand-600">(últimos 6 meses)</span>
 					</h2>
-					<ResponsiveContainer width="100%" height={isMobile ? 260 : 320}>
-						<ComposedChart data={monthlyData}>
+					<ResponsiveContainer width="100%" height={isMobile ? 280 : 320}>
+						<ComposedChart
+							data={monthlyData}
+							margin={
+								isMobile
+									? { left: -15, right: 5, top: 20, bottom: 30 }
+									: { top: 20, bottom: 15 }
+							}
+						>
 							<CartesianGrid
 								strokeDasharray="3 3"
 								stroke={chartTheme.gridColor}
 							/>
 							<XAxis dataKey="mes" tick={chartTheme.axisFont} />
-							<YAxis tick={chartTheme.axisFont} />
+							<YAxis
+								tick={chartTheme.axisFont}
+								width={isMobile ? 30 : 60}
+								domain={[(dataMin: number) => Math.floor(dataMin) - 1, "auto"]}
+							/>
 							<Tooltip
 								contentStyle={chartTheme.tooltipStyle}
 								formatter={(value: number) => [
@@ -272,7 +302,7 @@ const ClasesChart: React.FC = () => {
 									"Diferencia",
 								]}
 							/>
-							<Legend wrapperStyle={chartTheme.legendFont} />
+							{!isMobile && <Legend wrapperStyle={chartTheme.legendFont} />}
 							<Bar
 								dataKey="difference"
 								name="Diferencia vs objetivo"
@@ -281,21 +311,31 @@ const ClasesChart: React.FC = () => {
 								<LabelList
 									dataKey="difference"
 									position="top"
-									formatter={(value: React.ReactNode): React.ReactNode => {
-										if (typeof value === "number") {
-											return `${value > 0 ? "+" : ""}${value.toFixed(1)}`;
-										}
-
-										if (typeof value === "string") {
-											const num = parseFloat(value);
-											return Number.isNaN(num)
-												? value
-												: `${num > 0 ? "+" : ""}${num.toFixed(1)}`;
-										}
-
-										return value;
+									content={(props) => {
+										const x = Number(props.x);
+										const y = Number(props.y);
+										const barWidth = Number(props.width);
+										const value = props.value as number | undefined;
+										if (
+											value == null ||
+											Number.isNaN(x) ||
+											Number.isNaN(y) ||
+											Number.isNaN(barWidth)
+										)
+											return null;
+										const isNegative = value < 0;
+										const label = `${value > 0 ? "+" : ""}${value.toFixed(1)}`;
+										return (
+											<text
+												x={x + barWidth / 2}
+												y={isNegative ? y + 16 : y - 6}
+												textAnchor="middle"
+												style={{ fontSize: 11, fill: "#374151" }}
+											>
+												{label}
+											</text>
+										);
 									}}
-									style={{ fontSize: 11, fill: "#374151" }}
 								/>
 							</Bar>
 						</ComposedChart>

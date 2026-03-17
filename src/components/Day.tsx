@@ -39,13 +39,14 @@ export function Day({ num, calendarioAutoescuelaProps }: DayProps) {
 
 	const getClassByCantidad = (): string => {
 		if (isVacation)
-			return "bg-yellow-100 border border-yellow-300 text-yellow-900";
-		if (isWeekend) return "bg-red-50 border border-red-200 text-red-700";
+			return "bg-gradient-to-br from-amber-50 to-yellow-100 border border-amber-200/60 text-amber-800";
+		if (isWeekend)
+			return "bg-gradient-to-br from-red-50 to-rose-50 border border-red-100/60 text-red-500";
 		if (shouldShowCheck)
-			return "bg-green-100 border border-green-300 text-green-800";
+			return "bg-gradient-to-br from-emerald-50 to-green-100 border border-emerald-200/60 text-emerald-700";
 		if (clasesDelDia > 0)
-			return "bg-green-50 border border-green-200 text-green-700";
-		return "bg-blue-100 border border-blue-300 text-blue-800";
+			return "bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200/50 text-green-700";
+		return "bg-gradient-to-br from-slate-50 to-blue-50 border border-slate-200/50 text-slate-600";
 	};
 
 	const handleSelectChange = (value: number) => {
@@ -77,7 +78,7 @@ export function Day({ num, calendarioAutoescuelaProps }: DayProps) {
 	return (
 		<div
 			ref={containerRef}
-			className={`relative flex flex-col items-center justify-center rounded-md shadow-sm transition-all duration-200 cursor-pointer ${getClassByCantidad()} w-full h-full px-[4px] sm:px-[6px]`}
+			className={`relative flex flex-col items-center justify-center rounded-lg shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${getClassByCantidad()} w-full h-full px-[4px] sm:px-[6px]`}
 		>
 			<div className="flex items-center justify-center gap-[3px] font-bold text-[12px] sm:text-[14px]">
 				<span
@@ -111,7 +112,7 @@ export function Day({ num, calendarioAutoescuelaProps }: DayProps) {
 				</button>
 			) : (
 				<div
-					className={`absolute z-50 mt-10 bg-white border border-gray-300 rounded-md shadow-lg p-1 w-[90%] max-h-40 overflow-y-auto 
+					className={`absolute z-50 mt-10 bg-white/95 backdrop-blur-md border border-gray-200 rounded-xl shadow-glass p-1.5 w-[90%] max-h-40 overflow-y-auto 
             transform transition-all duration-200 ease-out origin-top
             ${isEditing ? "scale-100 opacity-100" : "scale-95 opacity-0"}`}
 				>
@@ -125,8 +126,10 @@ export function Day({ num, calendarioAutoescuelaProps }: DayProps) {
 									e.stopPropagation();
 									handleSelectChange(value);
 								}}
-								className={`w-full text-left px-2 py-1 text-[12px] rounded cursor-pointer hover:bg-emerald-100 ${
-									value === clasesDelDia ? "bg-emerald-200 font-semibold" : ""
+								className={`w-full text-left px-3 py-1.5 text-[12px] rounded-lg cursor-pointer hover:bg-brand-100 transition-colors ${
+									value === clasesDelDia
+										? "bg-brand-200 font-semibold text-brand-800"
+										: "text-gray-600"
 								}`}
 							>
 								{value} clase{value !== 1 ? "s" : ""}

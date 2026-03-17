@@ -13,19 +13,19 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
 	logo = calendar,
 }) => {
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-800">
+		<div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 text-gray-800">
 			{logo && (
 				<img
 					src={logo}
 					alt="Logo"
-					className="mb-6 animate-pulse opacity-90"
-					style={{ maxWidth: "300px", height: "auto" }}
+					className="mb-8 animate-float opacity-95"
+					style={{ maxWidth: "260px", height: "auto" }}
 				/>
 			)}
 
-			<CircularProgress size={48} thickness={4} color="success" />
+			<CircularProgress size={44} thickness={4} color="success" />
 
-			<p className="mt-4 text-base font-medium text-gray-600 animate-pulse">
+			<p className="mt-5 text-sm font-medium text-gray-500 animate-pulse tracking-wide">
 				{message}
 			</p>
 		</div>

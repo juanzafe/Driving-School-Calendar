@@ -12,7 +12,13 @@ body,
 
 @layer base {
 	body {
-		@apply bg-gray-100 text-gray-900 h-screen w-screen overflow-hidden;
+		@apply bg-gray-50 text-gray-800 h-screen w-screen overflow-hidden antialiased;
+		font-family:
+			"Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif;
+	}
+
+	* {
+		@apply transition-colors duration-150;
 	}
 }
 
@@ -22,22 +28,61 @@ body,
 		@apply w-screen min-h-screen flex flex-col items-center justify-start overflow-y-auto;
 	}
 
-	/* 🔹 Cuadrícula de días: más compacta */
+	/* Grid de días */
 	.DaysContainer {
-		@apply grid grid-cols-7 gap-[1px] w-full h-full bg-gray-300;
+		@apply grid grid-cols-7 gap-[1px] w-full h-full bg-gray-200/60;
 	}
 
-	/* 🔹 Día individual: más compacto y proporcional */
+	/* Día individual */
 	.Day {
-		@apply flex flex-col items-center justify-center text-green-400 bg-indigo-900 rounded-sm text-sm aspect-square hover:brightness-110 transition-all duration-150;
+		@apply flex flex-col items-center justify-center text-brand-600 bg-white rounded-sm text-sm aspect-square hover:brightness-105 transition-all duration-200;
 	}
 
-	/* 🔹 Encabezado de los días (L, M, X, etc.) */
+	/* Encabezado de los días (L, M, X, etc.) */
 	.MonthHeader {
-		@apply grid grid-cols-7 text-center bg-green-800 text-white font-semibold py-1 text-sm;
+		@apply grid grid-cols-7 text-center bg-brand-600 text-white font-semibold py-1.5 text-sm tracking-wide;
 	}
 
 	.DayHeader {
-		@apply flex items-center justify-center border border-green-700 py-1;
+		@apply flex items-center justify-center border-r border-brand-500/30 py-1.5;
 	}
+
+	/* Glass card effect */
+	.glass-card {
+		@apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-glass rounded-2xl;
+	}
+
+	/* Stat card */
+	.stat-card {
+		@apply bg-gradient-to-br from-white to-gray-50 border border-gray-100 rounded-xl p-4 shadow-soft;
+	}
+
+	/* Hover lift effect */
+	.hover-lift {
+		@apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-hover;
+	}
+
+	/* Gradient text */
+	.gradient-text {
+		@apply bg-gradient-to-r from-brand-600 to-emerald-500 bg-clip-text text-transparent;
+	}
+
+	/* Button primary */
+	.btn-primary {
+		@apply bg-gradient-to-r from-brand-500 to-emerald-500 text-white font-medium rounded-xl px-5 py-2.5 shadow-soft hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300 active:translate-y-0;
+	}
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 6px;
+}
+::-webkit-scrollbar-track {
+	@apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+	@apply bg-gray-300 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+	@apply bg-gray-400;
 }

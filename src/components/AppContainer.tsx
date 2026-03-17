@@ -168,11 +168,13 @@ export function AppContainer({ showOnlyChart = false }: AppContainerProps) {
 		});
 
 		return (
-			<div className="min-h-screen w-screen bg-gradient-to-b from-gray-50 to-emerald-50 text-gray-800 overflow-y-auto px-6 sm:px-12 py-6">
-				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-					<div className="flex items-center gap-2">
-						<BarChart3 size={28} className="text-emerald-700" />
-						<h1 className="text-3xl font-semibold">
+			<div className="min-h-screen w-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50 text-gray-800 overflow-y-auto px-6 sm:px-12 py-6">
+				<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+					<div className="flex items-center gap-3">
+						<div className="p-2 bg-gradient-to-br from-brand-500 to-emerald-500 rounded-xl text-white shadow-soft">
+							<BarChart3 size={24} />
+						</div>
+						<h1 className="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">
 							Gráfica de clases – {nombreMes}
 						</h1>
 					</div>
@@ -202,15 +204,22 @@ export function AppContainer({ showOnlyChart = false }: AppContainerProps) {
 		<Button
 			variant="outlined"
 			color="error"
-			startIcon={<LogOutIcon size={18} />}
+			startIcon={<LogOutIcon size={16} />}
 			onClick={() => auth.signOut()}
 			sx={{
-				borderRadius: 4,
+				borderRadius: 12,
 				textTransform: "none",
 				fontWeight: 500,
-				height: "38px",
-				padding: "0 12px",
+				height: "36px",
+				padding: "0 14px",
 				marginTop: 0,
+				fontSize: "0.8rem",
+				borderColor: "#fca5a5",
+				color: "#dc2626",
+				"&:hover": {
+					borderColor: "#ef4444",
+					backgroundColor: "rgba(239, 68, 68, 0.04)",
+				},
 			}}
 		>
 			Cerrar sesión
@@ -219,36 +228,33 @@ export function AppContainer({ showOnlyChart = false }: AppContainerProps) {
 
 	return (
 		<div
-			className={`w-screen bg-gradient-to-b from-white to-emerald-50 text-gray-800 overflow-y-auto ${isMobile ? "px-4 pt-6 pb-10 space-y-4" : "px-12 pt-6 pb-10 space-y-6"}`}
+			className={`w-screen min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30 text-gray-800 overflow-y-auto ${isMobile ? "px-4 pt-5 pb-10 space-y-4" : "px-8 lg:px-16 pt-6 pb-12 space-y-6"}`}
 		>
 			<header
-				className={`flex flex-col items-center relative text-center ${isMobile ? "mb-4 space-y-3" : "mb-8 space-y-6"}`}
+				className={`flex items-center justify-between animate-fade-in ${isMobile ? "flex-col gap-3 text-sm mb-3" : "flex-row mb-4"}`}
 			>
-				<div
-					className={`flex w-full items-center justify-between ${isMobile ? "flex-col gap-3 text-sm" : "flex-row px-8 mt-2 text-base"}`}
-				>
-					<div className="flex items-center gap-2 text-emerald-700 font-semibold">
-						<User size={isMobile ? 18 : 22} />
-						<span>{user?.displayName || "Invitado"}</span>
-					</div>
-					<div className="flex items-center gap-3 text-gray-600">
-						<div className="flex items-center gap-1">
-							<Mail size={isMobile ? 14 : 16} />
-							<span>{user?.email || "Sin correo"}</span>
-						</div>
-						<LogOut />
-					</div>
+				<div className="flex items-center gap-2.5 text-brand-700 font-semibold">
+					<User size={isMobile ? 16 : 18} className="text-brand-600" />
+					<span>{user?.displayName || "Invitado"}</span>
 				</div>
+				<div className="flex items-center gap-3 text-gray-500">
+					<div className="flex items-center gap-1.5">
+						<Mail size={isMobile ? 13 : 15} className="opacity-60" />
+						<span className="text-sm">{user?.email || "Sin correo"}</span>
+					</div>
+					<LogOut />
+				</div>
+			</header>
+
+			<div className="flex justify-center animate-fade-in">
 				<img
 					src={calendar}
 					alt="Logo calendario"
-					className={`w-full object-contain mt-0 ${isMobile ? "max-w-[140px]" : "max-w-[230px] -translate-x-14"}`}
+					className={`object-contain ${isMobile ? "max-w-[120px]" : "max-w-[200px]"}`}
 				/>
-			</header>
+			</div>
 
-			<section
-				className={`bg-white rounded-xl shadow-md border border-gray-200 w-full ${isMobile ? "p-0" : "p-6"}`}
-			>
+			<section className="w-full animate-slide-up">
 				<Month
 					calendario={calendario}
 					setClassCount={async (day, count) => {
@@ -281,7 +287,7 @@ export function AppContainer({ showOnlyChart = false }: AppContainerProps) {
 				/>
 			</section>
 
-			<div className="flex justify-center mt-8">
+			<div className="flex justify-center mt-8 animate-slide-up">
 				<Button
 					variant="contained"
 					color="primary"
@@ -292,11 +298,17 @@ export function AppContainer({ showOnlyChart = false }: AppContainerProps) {
 						)
 					}
 					sx={{
-						borderRadius: 4,
+						borderRadius: 12,
 						textTransform: "none",
-						fontWeight: 500,
-						px: 3,
-						py: 1,
+						fontWeight: 600,
+						px: 4,
+						py: 1.5,
+						background: "linear-gradient(135deg, #2d9d64, #10b981)",
+						boxShadow: "0 4px 14px rgba(45, 157, 100, 0.3)",
+						"&:hover": {
+							boxShadow: "0 6px 20px rgba(45, 157, 100, 0.4)",
+							background: "linear-gradient(135deg, #1f7f4f, #059669)",
+						},
 					}}
 				>
 					Ver gráfica de clases
