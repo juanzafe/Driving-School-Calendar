@@ -1,3 +1,4 @@
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { motion } from "framer-motion";
 import {
   CalendarDays,
@@ -7,10 +8,13 @@ import {
   GraduationCap,
   Sun,
   Target,
+  TrendingUp,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import ReactConfetti from "react-confetti";
+import { useUser } from "reactfire";
+import { db } from "../firebase/firebase";
 import VacacionesYJornada from "./VacacionesYJornada";
 
 export const spanishHolidays2025: string[] = [
@@ -118,12 +122,93 @@ const WorkingDaysCounter: React.FC<WorkingDaysCounterProps> = ({
   setVacationDates,
   onSaveVacations,
 }) => {
+  const { data: user } = useUser();
   const selectedHolidays =
     holidays ?? (year === 2026 ? spanishHolidays2026 : spanishHolidays2025);
 
   const [workingDays, setWorkingDays] = useState(0);
   const [remainingDays, setRemainingDays] = useState(0);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [total6Months, setTotal6Months] = useState<number | null>(null);
+
+  useEffect(() => {
+    const loadTotal6Months = async () => {
+      if (!user?.email) return;
+      const userEmail = user.email;
+      const classesRef = collection(db, "classespordia", userEmail, "dates");
+      const querySnapshot = await getDocs(classesRef);
+
+      const settingsRef = doc(db, "userSettings", userEmail);
+      const settingsSnap = await getDoc(settingsRef);
+      const jornadaValue =
+        settingsSnap.exists() && settingsSnap.data().jornada
+          ? settingsSnap.data().jornada
+          : "completa";
+
+      const monthlyCounts: Record<string, number> = {};
+      querySnapshot.docs.forEach((docSnap) => {
+        const data = docSnap.data();
+        if (!data.date || typeof data.count !== "number") return;
+        const date = data.date.toDate
+          ? data.date.toDate()
+          : new Date(data.date);
+        const key = `${date.getFullYear()}-${date.getMonth()}`;
+        monthlyCounts[key] = (monthlyCounts[key] || 0) + data.count;
+      });
+
+      const now = new Date();
+      let totalDiff = 0;
+      let hasData = false;
+
+      for (let i = 5; i >= 0; i--) {
+        const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const y = date.getFullYear();
+        const m = date.getMonth();
+        const key = `${y}-${m}`;
+        const clasesMes = monthlyCounts[key] || 0;
+        if (clasesMes === 0) continue;
+        hasData = true;
+
+        const holidaysRef = doc(db, "holidaysPerMonth", userEmail);
+        const holidaysSnap = await getDoc(holidaysRef);
+        const vacDates: string[] = [];
+        if (holidaysSnap.exists()) {
+          const hData = holidaysSnap.data();
+          const start = hData[`${key}-start`];
+          const end = hData[`${key}-end`];
+          if (start && end) {
+            const startDate = new Date(start as string);
+            const endDate = new Date(end as string);
+            const tempDate = new Date(startDate);
+            while (tempDate <= endDate) {
+              vacDates.push(
+                `${tempDate.getFullYear()}-${String(tempDate.getMonth() + 1).padStart(2, "0")}-${String(tempDate.getDate()).padStart(2, "0")}`,
+              );
+              tempDate.setDate(tempDate.getDate() + 1);
+            }
+          }
+        }
+
+        const hols = y === 2026 ? spanishHolidays2026 : spanishHolidays2025;
+        const allWorking = getWorkingDaysWithHolidays(y, m, hols, vacDates);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const pastWorking = allWorking.filter((dayStr) => {
+          const d = new Date(dayStr);
+          d.setHours(0, 0, 0, 0);
+          return d <= today;
+        });
+
+        const vpd = jornadaValue === "media" ? 7.8125 : 12.5;
+        const shouldHave = Math.round(pastWorking.length * vpd);
+        totalDiff += clasesMes - shouldHave;
+      }
+
+      setTotal6Months(hasData ? Math.round(totalDiff * 10) / 10 : null);
+    };
+
+    loadTotal6Months();
+  }, [user]);
 
   useEffect(() => {
     const allWorkingDays = getWorkingDaysWithHolidays(
@@ -170,7 +255,6 @@ const WorkingDaysCounter: React.FC<WorkingDaysCounterProps> = ({
   const pastWorkingDays = workingDays - remainingDays;
   const classesShouldHaveByToday = Math.round(pastWorkingDays * valorPorDia);
   const differenceWithToday = clasesDelMesVisible - classesShouldHaveByToday;
-
 
   return (
     <>
@@ -270,6 +354,23 @@ const WorkingDaysCounter: React.FC<WorkingDaysCounterProps> = ({
                   : "-"}
               </strong>
             </div>
+
+            {total6Months !== null && (
+              <div className="flex justify-between border-t border-gray-200 pt-2 mt-1">
+                <span className="flex items-center gap-1.5 text-gray-600">
+                  <TrendingUp size={15} className="text-brand-500" /> Total
+                  últimos 6 meses:
+                </span>
+                <strong
+                  className={
+                    total6Months >= 0 ? "text-green-600" : "text-red-600"
+                  }
+                >
+                  {total6Months > 0 ? "+" : ""}
+                  {total6Months.toFixed(1)}
+                </strong>
+              </div>
+            )}
           </div>
         </div>
 
