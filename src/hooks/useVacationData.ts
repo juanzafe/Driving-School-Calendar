@@ -28,12 +28,13 @@ export function useVacationData(currentDate: Date) {
 			if (docSnap.exists()) {
 				const data = docSnap.data();
 				if (data && typeof data === "object") {
+					const vacationDatesField = data[`${key}-vacationDates`];
 					const monthDates: string[] = [
-						...((data[`${key}-vacationDates`] as string[]) || []),
+						...((vacationDatesField as string[]) || []),
 					];
 
-					// Backward compat: if no new-format data, try old start/end format
-					if (monthDates.length === 0) {
+					// Backward compat: only if the new-format field doesn't exist at all
+					if (monthDates.length === 0 && vacationDatesField === undefined) {
 						const keysToCheck = [key];
 						const prevMonth = new Date(viewedYear, viewedMonth - 1, 1);
 						keysToCheck.push(
@@ -215,7 +216,7 @@ export function useVacationData(currentDate: Date) {
 			monthsAffected.add(`${d.getFullYear()}-${d.getMonth()}`);
 		}
 
-		const updates: Record<string, string[] | number> = {};
+		const updates: Record<string, string[] | number | string> = {};
 		for (const monthKey of monthsAffected) {
 			const existingDates: string[] =
 				(existingData[`${monthKey}-vacationDates`] as string[]) || [];
@@ -233,6 +234,9 @@ export function useVacationData(currentDate: Date) {
 			updates[`${monthKey}-vacationDates`] = remaining;
 			updates[`${monthKey}-vacationNumber`] = workingDaysInMonth;
 			updates[`${monthKey}-naturalDays`] = remaining.length;
+			// Clear old format fields so backward compat doesn't resurrect them
+			updates[`${monthKey}-start`] = "";
+			updates[`${monthKey}-end`] = "";
 		}
 
 		await setDoc(docRef, updates, { merge: true });
