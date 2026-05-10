@@ -36,7 +36,6 @@ export const spanishHolidays2026: string[] = [
 	"2026-12-31",
 ];
 
-
 export const spanishHolidays2027: string[] = [
 	"2027-01-01", // Año Nuevo (viernes)
 	"2027-01-06", // Reyes Magos (miércoles)
