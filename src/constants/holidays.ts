@@ -32,10 +32,41 @@ export const spanishHolidays2026: string[] = [
 	"2026-12-07",
 	"2026-12-08",
 	"2026-12-25",
+	"2026-12-24",
+	"2026-12-31",
+];
+
+
+export const spanishHolidays2027: string[] = [
+	"2027-01-01", // Año Nuevo (viernes)
+	"2027-01-06", // Reyes Magos (miércoles)
+	"2027-03-01", // Día de Andalucía — trasladado (Feb 28 = domingo)
+	"2027-03-25", // Jueves Santo
+	"2027-03-26", // Viernes Santo
+	"2027-05-01", // Día del Trabajador (sábado)
+	"2027-08-16", // Asunción — trasladada (Ago 15 = domingo)
+	"2027-08-19", // Feria de Málaga (jueves)
+	"2027-09-08", // Virgen de la Victoria (miércoles)
+	"2027-10-12", // Día de la Hispanidad (martes)
+	"2027-11-01", // Todos los Santos (lunes)
+	"2027-12-06", // Día de la Constitución (lunes)
+	"2027-12-08", // Inmaculada Concepción (miércoles)
+	"2027-12-25",
+	"2027-12-24",
+	"2027-12-31",
 ];
 
 export function getHolidaysForYear(year: number): string[] {
-	return year === 2026 ? spanishHolidays2026 : spanishHolidays2025;
+	switch (year) {
+		case 2025:
+			return spanishHolidays2025;
+		case 2026:
+			return spanishHolidays2026;
+		case 2027:
+			return spanishHolidays2027;
+		default:
+			return spanishHolidays2025;
+	}
 }
 
 export function getWorkingDaysWithHolidays(
